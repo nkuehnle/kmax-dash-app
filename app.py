@@ -3,10 +3,11 @@ from dash import callback, dcc, html
 from dash.dependencies import Output, Input
 import plotly.express as px
 import pandas as pd
+from pathlib import Path
 
-df = pd.read_csv(
-    "https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv"
-)
+HOME_DIR = Path(__file__).resolve().parent
+
+df = pd.read_csv(HOME_DIR / "data" / "gapminder_unfiltered.csv")
 
 app = dash.Dash(__name__)
 
