@@ -1,28 +1,29 @@
-# Import required libraries
-import os
-from random import randint
-
-from chart_studio import plotly as py
-from plotly.graph_objs import *
-
-import flask
 import dash
-from dash.dependencies import Input, Output, State, Event
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import callback, dcc, html
+from dash.dependencies import Output, Input
+import plotly.express as px
+import pandas as pd
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/plotly/datasets/master/gapminder_unfiltered.csv"
+)
+
+app = dash.Dash(__name__)
+
+app.layout = html.Div(
+    [
+        html.H1(children="Title of Dash App", style={"textAlign": "center"}),
+        dcc.Dropdown(df.country.unique(), "Canada", id="dropdown-selection"),
+        dcc.Graph(id="graph-content"),
+    ]
+)
 
 
-# Setup the app
-# Make sure not to change this file name or the variable names below,
-# the template is configured to execute 'server' on 'app.py'
-server = flask.Flask(__name__)
-server.secret_key = os.environ.get("secret_key", str(randint(0, 1000000)))
-app = dash.Dash(__name__, server=server)
+@callback(Output("graph-content", "figure"), Input("dropdown-selection", "value"))
+def update_graph(value):
+    dff = df[df.country == value]
+    return px.line(dff, x="year", y="pop")
 
 
-# Put your Dash code here
-
-
-# Run the Dash app
 if __name__ == "__main__":
-    app.server.run(debug=True, threaded=True)
+    app.run(debug=True)
