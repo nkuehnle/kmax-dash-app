@@ -10,6 +10,7 @@ HOME_DIR = Path(__file__).resolve().parent
 df = pd.read_csv(HOME_DIR / "data" / "gapminder_unfiltered.csv")
 
 app = dash.Dash(__name__)
+server = app.server
 
 app.layout = html.Div(
     [
